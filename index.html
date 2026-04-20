@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustPoint Kiosk Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-mesh">
+        <div class="mesh-blob blob-1"></div>
+        <div class="mesh-blob blob-2"></div>
+        <div class="mesh-blob blob-3"></div>
+    </div>
+
+    <header class="app-header">
+        <div class="logo">
+            <i class="fa-solid fa-bolt logo-icon" style="color: var(--warning);"></i>
+            <h1>TrustPoint <span>Simulator</span></h1>
+        </div>
+        <div class="header-badges">
+            <span class="badge offline"><i class="fa-solid fa-satellite-dish"></i> 4G LTE</span>
+            <span class="badge secure"><i class="fa-solid fa-lock"></i> AES-256</span>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Dashboard Left: Hardware Simulation -->
+        <section class="hardware-section relative-layer">
+            <div class="device-frame">
+                <!-- Top bezel features -->
+                <div class="device-bezel top">
+                    <div class="device-camera"><div class="lens"></div></div>
+                </div>
+                
+                <!-- Main Display -->
+                <div class="device-screen" id="kiosk-screen">
+                    <!-- Dynamic screen content injected here -->
+                </div>
+
+                <!-- Bottom bezel / hardware modules -->
+                <div class="device-hardware-modules mt-md">
+                    <div class="hw-module" id="hw-fingerprint">
+                        <div class="hw-module-icon"><i class="fa-solid fa-fingerprint"></i></div>
+                        <span>Scanner</span>
+                    </div>
+                    <div class="hw-module" id="hw-scanner">
+                        <div class="hw-module-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                        <span>OCR slot</span>
+                    </div>
+                    <div class="hw-module" id="hw-nfc">
+                        <div class="hw-module-icon"><i class="fa-brands fa-nfc-symbol"></i></div>
+                        <span>NFC</span>
+                    </div>
+                    <div class="hw-module" id="hw-printer">
+                        <div class="hw-module-icon"><i class="fa-solid fa-print"></i></div>
+                        <span>Printer</span>
+                    </div>
+                    <div class="hw-module" id="hw-voice">
+                        <div class="hw-module-icon"><i class="fa-solid fa-microphone"></i></div>
+                        <span>Mic</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hidden initially, sliding out -->
+            <div class="certificate-output" id="certificate-output">
+                <div class="cert-paper">
+                    <h4 class="cert-title">TRUSTSCORE CERTIFICATE</h4>
+                    <div class="cert-details">
+                        <p class="cert-name">Priya Sharma</p>
+                        <p class="cert-id">TS-2024-MH-004821</p>
+                    </div>
+                    <div class="cert-score-wrap">
+                        <div class="cert-score">742</div>
+                        <div class="cert-max">/900</div>
+                    </div>
+                    <div class="cert-status">GOOD STANDING</div>
+                    <div class="cert-info">Credit: ₹25,000 - ₹75,000</div>
+                    <div class="cert-info">Rate: 14% - 18% APR</div>
+                    <div class="cert-footer">
+                        <div class="cert-qr"><i class="fa-solid fa-qrcode fa-3x"></i></div>
+                        <div class="cert-meta">
+                            <small>Valid 90 days. Aadhaar Verified.</small>
+                            <small>TrustScore India Pvt Ltd (RBI Reg)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Right: Narrative & Controls -->
+        <section class="narrative-section glass-panel relative-layer">
+            <div class="stage-indicator">
+                <span class="stage-number" id="stage-number">Stage 1 of 11</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="narrative-content">
+                <h2 id="stage-title" class="font-outfit">Welcome to TrustPoint</h2>
+                <div class="time-estimate">
+                    <i class="fa-regular fa-clock"></i> <span id="stage-time">2 mins</span>
+                </div>
+                
+                <div class="story-box glass-card mt-md">
+                    <div class="story-tag"><i class="fa-solid fa-book-open"></i> Story</div>
+                    <p id="stage-description" class="lead-text">
+                        Priya, a rural woman with no smartphone, bank account, or credit history, visits her local Common Service Centre. She brings her electricity bill and Aadhaar card.
+                    </p>
+                </div>
+
+                <div class="technical-details mt-lg" id="tech-details-container">
+                    <h3 class="font-outfit text-primary"><i class="fa-solid fa-microchip"></i> System Action</h3>
+                    <ul id="tech-list" class="styled-list">
+                        <!-- Dynamic injected li -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="stage-controls">
+                <button class="glass-btn btn-secondary" id="btn-prev">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <button class="glass-btn btn-primary" id="btn-next">
+                    Next Stage <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
