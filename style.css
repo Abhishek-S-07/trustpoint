@@ -263,10 +263,10 @@ body.cert-active-body .device-frame {
     z-index: 1;
     overflow: hidden;
     height: 0;
-    transition: height 3s ease-out;
+    transition: height 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .certificate-output.printing {
-    height: 400px;
+    height: 420px;
 }
 .cert-paper {
     background: #f8fafc;

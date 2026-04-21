@@ -96,19 +96,32 @@ window.formatCustomDate = function(date) {
 window.computeMemberMetrics = function(totalSpent, joinDate) {
     const jd = new Date(joinDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
     const cd = new Date();
-    const daysActive = Math.max(1, Math.floor((cd - jd) / (1000 * 60 * 60 * 24)));
-    const monthsActive = Math.max(1, daysActive / 30.4); 
     
-    const avgSpend = Math.round(totalSpent / monthsActive);
-    const activityBonus = Math.min(daysActive * 0.8, 150); 
-    const financialBonus = Math.min((avgSpend / 100) * 12, 500); 
+    // Use Math.ceil to avoid 0 days for new registrations
+    const daysActive = Math.max(1, Math.ceil((cd - jd) / (1000 * 60 * 60 * 24)));
     
-    let score = Math.floor(250 + activityBonus + financialBonus);
+    // PREDICTION RIG: If they joined less than 30 days ago, project their monthly spend
+    // based on their daily average. If older, use the actual monthly average.
+    let avgSpend;
+    if (daysActive < 30) {
+        // Project: (Total / Days) * 30.4
+        avgSpend = Math.round((totalSpent / daysActive) * 30.4);
+    } else {
+        const monthsActive = daysActive / 30.4;
+        avgSpend = Math.round(totalSpent / monthsActive);
+    }
+    
+    // Core Math Module Computations for Score
+    // Using log-based growth for financial bonus to feel more realistic
+    const activityBonus = Math.min(daysActive * 0.5, 120); 
+    const financialBonus = Math.min(Math.log10(avgSpend || 1) * 150, 550);
+    
+    let score = Math.floor(280 + activityBonus + financialBonus);
     if(score > 900) score = 900;
     
     const docsUploaded = Math.floor(totalSpent / 850) + (daysActive < 10 ? 1 : 0);
 
-    // Create a breakdown list based on totalSpent
+    // Dynamic Breakdown Generation
     const docBreakdown = [
         { type: "Electricity Bills", count: Math.ceil(docsUploaded * 0.4), val: Math.round(totalSpent * 0.45) },
         { type: "Water Bills", count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.15) },
@@ -739,7 +752,7 @@ const stages = [
     {
         id: 10,
         title: "Certificate Printing",
-        time: "30 secs",
+        time: "10 secs",
         desc: "The built-in thermal printer produces a physical certificate with a tamper-proof QR code, authorizing her profile for partner lenders.",
         tech: [
             "Encrypted profile ID generated.",
