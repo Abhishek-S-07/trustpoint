@@ -85,7 +85,26 @@ const t = new Proxy(rawT, {
     }
 });
 
-window.openProfile = function(name, score, color, joinDate) {
+window.computeMemberMetrics = function(totalSpent, joinDate) {
+    const jd = new Date(joinDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
+    const cd = new Date();
+    const daysActive = Math.max(1, Math.floor((cd - jd) / (1000 * 60 * 60 * 24)));
+    const monthsActive = Math.max(1, daysActive / 30.4); // accurate average month divisor
+    
+    // Core Math Module Computations
+    const avgSpend = Math.round(totalSpent / monthsActive);
+    const activityBonus = Math.min(daysActive * 0.8, 150); // Up to 150 points for longevity
+    const financialBonus = Math.min((avgSpend / 100) * 12, 500); // Up to 500 for transaction history
+    
+    let score = Math.floor(250 + activityBonus + financialBonus);
+    if(score > 900) score = 900;
+    
+    const docsUploaded = Math.floor(totalSpent / 850) + (daysActive < 10 ? 1 : 0);
+
+    return { daysActive, avgSpend, score, docsUploaded, totalSpent, jd, joinDate };
+};
+
+window.openProfile = function(name, totalSpent, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-fingerprint w-full h-full fade-in" style="justify-content: center;">
@@ -108,41 +127,34 @@ window.openProfile = function(name, score, color, joinDate) {
         }
         
         setTimeout(() => {
-            showMemberDash(name, score, color, joinDate);
+            showMemberDash(name, totalSpent, color, joinDate);
         }, 1500);
     }, 2000);
 };
 
-window.showMemberDash = function(name, score, color, joinDate) {
+window.showMemberDash = function(name, totalSpent, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     if(!ks) return;
 
-    // Calculate rating based on join date and score
-    // If they joined recently and have some score, they might still be rated "GOOD PROGRESS"
-    // Let's assume current date is roughly Oct 2024 for demo purposes.
-    const jd = new Date(joinDate);
-    const cd = new Date();
-    const daysActive = Math.max(1, Math.floor((cd - jd) / (1000 * 60 * 60 * 24)));
-    
+    const meta = computeMemberMetrics(totalSpent, joinDate);
+    const score = meta.score;
+    const daysActive = meta.daysActive;
+
     let rating = "POOR";
     let ratingColor = "#ef4444";
     
-    const parsedScore = parseInt(score);
     if(daysActive < 10) {
-        // Joined < 10 days ago (a week ago)
-        rating = parsedScore > 300 ? "GOOD PROGRESS" : "NEWBIE";
-        ratingColor = parsedScore > 300 ? "#10b981" : "#f59e0b";
+        rating = score > 300 ? "GOOD PROGRESS" : "NEWBIE";
+        ratingColor = score > 300 ? "#10b981" : "#f59e0b";
     } else if (daysActive < 60) {
-        // Joined < 60 days ago
-        if(parsedScore > 600) rating = "EXCELLENT";
-        else if (parsedScore > 400) rating = "GOOD PROGRESS";
+        if(score > 600) rating = "EXCELLENT";
+        else if (score > 400) rating = "GOOD PROGRESS";
         else rating = "MEDIUM";
-        ratingColor = parsedScore > 600 ? "#10b981" : (parsedScore > 400 ? "#3b82f6" : "#f59e0b");
+        ratingColor = score > 600 ? "#10b981" : (score > 400 ? "#3b82f6" : "#f59e0b");
     } else {
-        // Older accounts
-        if(parsedScore > 750) { rating = "EXCELLENT"; ratingColor = "#10b981"; }
-        else if(parsedScore > 500) { rating = "GOOD"; ratingColor = "#3b82f6"; }
-        else if(parsedScore > 350) { rating = "MEDIUM"; ratingColor = "#f59e0b"; }
+        if(score > 750) { rating = "EXCELLENT"; ratingColor = "#10b981"; }
+        else if(score > 500) { rating = "GOOD"; ratingColor = "#3b82f6"; }
+        else if(score > 350) { rating = "MEDIUM"; ratingColor = "#f59e0b"; }
         else { rating = "BAD"; ratingColor = "#ef4444"; }
     }
 
@@ -171,19 +183,21 @@ window.showMemberDash = function(name, score, color, joinDate) {
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 80%;">
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberScore(${score}, '${color}', '${name}', '${joinDate}')"><i class="fa-solid fa-chart-pie mr-2"></i> Check Score Points</button>
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberUpload('${name}', ${score}, '${color}', '${joinDate}')"><i class="fa-solid fa-file-arrow-up mr-2"></i> Upload Documents</button>
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberPrint('${name}', ${score}, '${color}')"><i class="fa-solid fa-print mr-2"></i> Print Certificate</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberScore('${totalSpent}', '${color}', '${name}', '${joinDate}')"><i class="fa-solid fa-chart-pie mr-2"></i> Check Score Points</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberUpload('${name}', '${totalSpent}', '${color}', '${joinDate}')"><i class="fa-solid fa-file-arrow-up mr-2"></i> Upload Documents</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberPrint('${name}', '${totalSpent}', '${color}', '${joinDate}')"><i class="fa-solid fa-print mr-2"></i> Print Certificate</button>
             </div>
         </div>
     `;
 };
 
-window.openMemberScore = function(score, color, name, joinDate) {
+window.openMemberScore = function(totalSpent, color, name, joinDate) {
     const ks = document.getElementById('kiosk-screen');
+    const meta = computeMemberMetrics(totalSpent, joinDate);
+
     ks.innerHTML = `
         <div class="kiosk-score fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', ${score}, '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <div class="score-dial text-accent" style="--accent: ${color};">
                 <div class="dial-inner">
                     <div class="dial-number" id="mem-final-score" style="color: ${color}">0</div>
@@ -198,7 +212,7 @@ window.openMemberScore = function(score, color, name, joinDate) {
         const scoreEl = document.getElementById('mem-final-score');
         if(!scoreEl) return;
         let c = 0;
-        let target = parseInt(score);
+        let target = meta.score;
         let int = setInterval(()=>{
             c += Math.ceil(target/15);
             if(c >= target) { clearInterval(int); scoreEl.innerText = target; }
@@ -207,11 +221,11 @@ window.openMemberScore = function(score, color, name, joinDate) {
     }, 100);
 }
 
-window.openMemberUpload = function(name, score, color, joinDate) {
+window.openMemberUpload = function(name, totalSpent, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-ocr fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', ${score}, '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h2 class="text-white mb-4 text-lg">Upload Alternative Data (e.g. Utility Bill)</h2>
             <div class="doc-scan-area">
                 <i class="fa-solid fa-file-invoice text-4xl text-muted opacity-50"></i>
@@ -230,37 +244,28 @@ window.openMemberUpload = function(name, score, color, joinDate) {
         const laser = document.getElementById('mem-scan-laser');
         if(laser) laser.style.display = 'none';
         
-        let newScore = parseInt(score) + 45; // Increase score gradually
-        if (newScore > 900) newScore = 900;
+        let newTotalSpent = parseInt(totalSpent) + 2100; // Mock addition of utility bill doc verification
         setTimeout(() => {
-            let newColor = newScore > 700 ? '#10b981' : (newScore > 400 ? '#3b82f6' : '#f59e0b');
-            showMemberDash(name, newScore, newColor, joinDate);
+            let nMeta = computeMemberMetrics(newTotalSpent, joinDate);
+            let newColor = nMeta.score > 700 ? '#10b981' : (nMeta.score > 400 ? '#3b82f6' : '#f59e0b');
+            showMemberDash(name, newTotalSpent, newColor, joinDate);
         }, 2000);
     }, 2500);
 }
 
-window.openMemberPrint = function(name, score, color, joinDate) {
-    // Dynamic mock math
-    const jd = new Date(joinDate || new Date(Date.now() - 30*24*60*60*1000));
-    const cd = new Date();
-    const daysActive = Math.max(1, Math.floor((cd - jd) / (1000 * 60 * 60 * 24)));
-    const monthsActive = Math.max(1, daysActive / 30);
-    
-    let parsedScore = parseInt(score);
-    const docsUploaded = Math.floor(parsedScore / 90) + (daysActive < 10 ? 1 : 0);
-    const totalValue = Math.floor(parsedScore * 135.5 + (Math.random()*1000));
-    const avgSpend = Math.floor(totalValue / monthsActive);
+window.openMemberPrint = function(name, totalSpent, color, joinDate) {
+    const meta = computeMemberMetrics(totalSpent, joinDate);
     
     let eligibility = "Up to ₹15,000";
     let standing = "POOR STANDING";
-    if (parsedScore > 700) { eligibility = "Up to ₹1,50,000"; standing = "EXCELLENT STANDING"; }
-    else if (parsedScore > 400) { eligibility = "Up to ₹50,000"; standing = "GOOD PROGRESS"; }
-    else if (daysActive < 15) { eligibility = "Up to ₹10,000 (Newbie)"; standing = "BUILDING PROFILE"; }
+    if (meta.score > 700) { eligibility = "Up to ₹1,50,000"; standing = "EXCELLENT STANDING"; }
+    else if (meta.score > 400) { eligibility = "Up to ₹50,000"; standing = "GOOD PROGRESS"; }
+    else if (meta.daysActive < 15) { eligibility = "Up to ₹10,000 (Newbie)"; standing = "BUILDING PROFILE"; }
 
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-print fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', ${score}, '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <i class="fa-solid fa-print fa-4x text-primary mb-4" style="animation: pulse-border 1.5s infinite;"></i>
             <h2 class="text-white mb-4 text-xl">Printing Certificate...</h2>
         </div>
@@ -270,22 +275,22 @@ window.openMemberPrint = function(name, score, color, joinDate) {
         const pn = document.querySelector('.cert-name');
         const ps = document.querySelector('.cert-score');
         if(pn) pn.innerText = name;
-        if(ps) ps.innerText = score;
+        if(ps) ps.innerText = meta.score;
         
         const dtEl = document.getElementById('print-cert-date');
-        if(dtEl) dtEl.innerText = jd.toLocaleDateString();
+        if(dtEl) dtEl.innerText = meta.jd.toLocaleDateString();
         
         const docEl = document.getElementById('print-cert-docs');
-        if(docEl) docEl.innerText = docsUploaded.toString();
+        if(docEl) docEl.innerText = meta.docsUploaded.toString();
         
         const stEl = document.getElementById('print-cert-status');
         if(stEl) stEl.innerText = standing;
         
         const totEl = document.getElementById('print-cert-total');
-        if(totEl) totEl.innerText = '₹' + totalValue.toLocaleString('en-IN');
+        if(totEl) totEl.innerText = '₹' + meta.totalSpent.toLocaleString('en-IN');
         
         const avgEl = document.getElementById('print-cert-avg');
-        if(avgEl) avgEl.innerText = '₹' + avgSpend.toLocaleString('en-IN');
+        if(avgEl) avgEl.innerText = '₹' + meta.avgSpend.toLocaleString('en-IN');
         
         const loanEl = document.getElementById('print-cert-loan');
         if(loanEl) loanEl.innerText = eligibility;
@@ -347,37 +352,43 @@ const stages = [
                     </div>
                     
                     <div class="db-grid">
-                        <div class="db-card" onclick="openProfile('Rahul Kumar', '320', '#f59e0b', '${new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
+                        <div class="db-card" onclick="openProfile('Rahul Kumar', '1500', '#f59e0b', '${new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
                             <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Rahul Kumar</div>
-                                <div class="db-score text-warning">${t.scoreTxt[appLang]} 320</div>
+                                <div class="db-score text-warning" id="live-sc-1">Pts Loading</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Anjali Gupta', '410', '#3b82f6', '${new Date(Date.now() - 80 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
+                        <div class="db-card" onclick="openProfile('Anjali Gupta', '9800', '#3b82f6', '${new Date(Date.now() - 80 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
                             <div class="db-avatar" style="border: 2px solid #3b82f6; color: #3b82f6"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Anjali Gupta</div>
-                                <div class="db-score text-primary">${t.scoreTxt[appLang]} 410</div>
+                                <div class="db-score text-primary" id="live-sc-2">Pts Loading</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Sunil Das', '250', '#ef4444', '${new Date(Date.now() - 150 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
+                        <div class="db-card" onclick="openProfile('Sunil Das', '200', '#ef4444', '${new Date(Date.now() - 150 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
                             <div class="db-avatar" style="border: 2px solid #ef4444; color: #ef4444"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Sunil Das</div>
-                                <div class="db-score" style="color:#ef4444">${t.scoreTxt[appLang]} 250</div>
+                                <div class="db-score" style="color:#ef4444" id="live-sc-3">Pts Loading</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Meena Devi', '380', '#10b981', '${new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
+                        <div class="db-card" onclick="openProfile('Meena Devi', '4500', '#10b981', '${new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
                             <div class="db-avatar" style="border: 2px solid #10b981; color: #10b981"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Meena Devi</div>
-                                <div class="db-score text-accent">${t.scoreTxt[appLang]} 380 <span style="font-size:0.6rem;opacity:0.7">(New)</span></div>
+                                <div class="db-score text-accent" id="live-sc-4">Pts Loading <span style="font-size:0.6rem;opacity:0.7">(New)</span></div>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
+            setTimeout(() => {
+                document.getElementById('live-sc-1').innerHTML = t.scoreTxt[appLang] + " " + computeMemberMetrics(1500, new Date(Date.now() - 45 * 86400000)).score;
+                document.getElementById('live-sc-2').innerHTML = t.scoreTxt[appLang] + " " + computeMemberMetrics(9800, new Date(Date.now() - 80 * 86400000)).score;
+                document.getElementById('live-sc-3').innerHTML = t.scoreTxt[appLang] + " " + computeMemberMetrics(200, new Date(Date.now() - 150 * 86400000)).score;
+                document.getElementById('live-sc-4').innerHTML = t.scoreTxt[appLang] + " " + computeMemberMetrics(4500, new Date(Date.now() - 7 * 86400000)).score + ` <span style="font-size:0.6rem;opacity:0.7">(New)</span>`;
+            }, 50);
         }
     },
     {
