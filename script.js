@@ -70,8 +70,48 @@ const rawT = {
     printDispense: { hi: "नीचे प्राप्त करें...", en: "DISPENSING BELOW..." },
 
     // Stage 11
-    endThanks: { hi: "धन्यवाद !", en: "THANK YOU !" },
-    endMsg: { hi: "वित्तीय समावेशन पूर्ण।", en: "Financial Inclusion Complete." }
+    endThanks: { hi: "धन्यवाद !", en: "THANK YOU !", ta: "நன்றி !", te: "ధన్యవాదాలు !", kn: "ಧನ್ಯವಾದಗಳು !" },
+    endMsg: { hi: "वित्तीय समावेशन पूर्ण।", en: "Financial Inclusion Complete.", ta: "நிதி உள்ளடக்கம் முடிந்தது.", te: "ఆర్థిక చేరిక పూర్తయింది.", kn: "ಹಣಕಾಸು ಸೇರ್ಪಡೆ ಪೂರ್ಣಗೊಂಡಿದೆ." },
+
+    // Member Flow
+    backBtn: { en: "Back", hi: "पीछे", ta: "பின்", te: "వెనుకకు", kn: "ಹಿಂದಕ್ಕೆ" },
+    authTitle: { en: "Authenticate", hi: "प्रमाणीकृत करें", ta: "அங்கீகரி", te: "ధృవీకరించండి", kn: "ದೃಢೀಕರಿಸಿ" },
+    thumbInstruct: { en: "Place thumb to verify...", hi: "सत्यापित करने के लिए अंगूठा रखें...", ta: "சரிபார்க்க பெருவிரலை வைக்கவும்...", te: "ధృవీకరించడానికి బొటనవేలు పెట్టండి...", kn: "ದೃಢೀಕರಿಸಲು ಹೆಬ್ಬೆಟ್ಟು ಇರಿಸಿ..." },
+    idVerified: { en: "Identity Verified", hi: "पहचान सत्यापित", ta: "அடையாளம் சரிபார்க்கப்பட்டது", te: "గుర్తింపు ధృవీకరించబడింది", kn: "ಗುರುತು ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿದೆ" },
+    statusTxt: { en: "STATUS", hi: "स्थिति", ta: "நிலை", te: "స్థితి", kn: "ಸ್ಥಿತಿ" },
+    activeDaysTxt: { en: "ACTIVE DAYS", hi: "सक्रिय दिन", ta: "செயலில் உள்ள நாட்கள்", te: "క్రియాశీల రోజులు", kn: "ಸಕ್ರಿಯ ದಿನಗಳು" },
+    checkPoints: { en: "Check Score Points", hi: "स्कोर अंक जाँचें", ta: "மதிப்பெண் சரிபார்க்கவும்", te: "స్కోరు పాయింట్లను తనిఖీ చేయండి", kn: "ಸ್ಕೋರ್ ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ" },
+    uploadDocs: { en: "Upload Documents", hi: "दस्तावेज़ अपलोड करें", ta: "ஆவணங்களை பதிவேற்றவும்", te: "పత్రాలను అప్‌లోడ్ చేయండి", kn: "ದಾಖಲೆಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ" },
+    printCert: { en: "Print Certificate", hi: "प्रमाण पत्र प्रिंट करें", ta: "சான்றிதழ் அச்சிடு", te: "ధృవీకరణ పత్రాన్ని ముద్రించండి", kn: "ಪ್ರಮಾಣಪತ್ರವನ್ನು ಮುದ್ರಿಸಿ" },
+    currentScore: { en: "Current TrustScore", hi: "वर्तमान ट्रस्टस्कोर", ta: "தற்போதைய மதிப்பீடு", te: "ప్రస్తుత ట్రస్ట్ స్కోర్", kn: "ಪ್ರಸ್ತುತ ಟ್ರಸ್ಟ್ ಸ್ಕೋರ್" },
+    moreDocs: { en: "Upload more documents or verify bills to gradually increase your score.", hi: "अपना स्कोर धीरे-धीरे बढ़ाने के लिए और दस्तावेज़ अपलोड करें या बिल सत्यापित करें।", ta: "உங்கள் மதிப்பெண்ணை படிப்படியாக அதிகரிக்க கூடுதல் ஆவணங்களை பதிவேற்றவும்.", te: "మీ స్కోర్‌ను క్రమంగా పెంచడానికి మరిన్ని పత్రాలను అప్‌లోడ్ చేయండి.", kn: "ನಿಮ್ಮ ಸ್ಕೋರ್ ಅನ್ನು ಕ್ರಮೇಣ ಹೆಚ್ಚಿಸಲು ಹೆಚ್ಚಿನ ದಾಖಲೆಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ." },
+    altData: { en: "Upload Alternative Data (e.g. Utility Bill)", hi: "वैकल्पिक डेटा अपलोड करें (जैसे बिजली बिल)", ta: "மாற்றுத் தரவைப் பதிவேற்றவும்", te: "ప్రత్యామ్నాయ డేటాను అప్‌లోడ్ చేయండి", kn: "ಪರ್ಯಾಯ ಡೇಟಾವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ" },
+    scanningDoc: { en: "SCANNING DOCUMENT...", hi: "दस्तावेज़ स्कैन हो रहा है...", ta: "ஆவணம் ஸ்கேன் செய்யப்படுகிறது...", te: "పత్రాన్ని స్కాన్ చేస్తోంది...", kn: "ದಾಖಲೆಯನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಲಾಗುತ್ತಿದೆ..." },
+    docVerified: { en: "Verified. Score Increased!", hi: "सत्यापित। स्कोर बढ़ गया!", ta: "சரிபார்க்கப்பட்டது. மதிப்பெண் அதிகரித்தது!", te: "ధృవీకరించబడింది. స్కోరు పెరిగింది!", kn: "ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿದೆ. ಸ್ಕೋರ್ ಹೆಚ್ಚಾಗಿದೆ!" },
+    printingCert: { en: "Printing Certificate...", hi: "प्रमाण पत्र प्रिंट हो रहा है...", ta: "சான்றிதழ் அச்சிடப்படுகிறது...", te: "సర్టిఫికేట్ ప్రింట్ అవుతోంది...", kn: "ಪ್ರಮಾಣಪತ್ರ ಮುದ್ರಿಸಲಾಗುತ್ತಿದೆ..." },
+
+    // Certificate / Labels
+    certTitle: { en: "TRUSTSCORE CERTIFICATE", hi: "ट्रस्टस्कोर प्रमाणपत्र", ta: "நம்பிக்கை மதிப்பெண் சான்றிதழ்", te: "ట్రస్ట్ స్కోర్ సర్టిఫికేట్", kn: "ಟ್ರಸ್ಟ್ ಸ್ಕೋರ್ ಪ್ರಮಾಣಪತ್ರ" },
+    certName: { en: "NAME", hi: "नाम", ta: "பெயர்", te: "பேரு", kn: "ಹೆಸರು" },
+    certReg: { en: "REGISTERED", hi: "पंजीकृत", ta: "பதிவு செய்யப்பட்டது", te: "రిజిస్టర్ చేయబడింది", kn: "ನೋಂದಾಯಿಸಲಾಗಿದೆ" },
+    certDocs: { en: "DOCS UPLOADED", hi: "दस्तावेज़ अपलोड", ta: "பதிவேற்றப்பட்ட ஆவணங்கள்", te: "పత్రాలు అప్‌లోడ్ చేయబడ్డాయి", kn: "ದಾಖಲೆಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ" },
+    certId: { en: "ID NUMBER", hi: "ID संख्या", ta: "அடையாள எண்", te: "ID సంఖ్య", kn: "ID ಸಂಖ್ಯೆ" },
+    totalVal: { en: "Total Document Value:", hi: "कुल दस्तावेज़ मूल्य:", ta: "மொத்த ஆவண மதிப்பு:", te: "మొత్తం పత్రం విలువ:", kn: "ಒಟ್ಟು ದಾಖಲೆಯ ಮೌಲ್ಯ:" },
+    projMonthly: { en: "Projected Monthly:", hi: "अनुमानित मासिक:", ta: "மாதாந்திர மதிப்பீடு:", te: "అంచనా నెలవారీ:", kn: "ಅಂದಾಜು ಮಾಸಿಕ:" },
+    eligibility: { en: "Eligibility:", hi: "पात्रता:", ta: "தகுதி:", te: "అర్హత:", kn: "ಅರ್ಹತೆ:" },
+    eligibleMsg: { en: "This is to certify that based on the provided alternative data points, the individual is <strong>eligible to apply for a loan</strong> as per the calculated TrustScore.", hi: "यह प्रमाणित किया जाता है कि दिए गए वैकल्पिक डेटा के आधार पर, व्यक्ति ट्रस्टस्कोर के अनुसार <strong>लोन के लिए आवेदन करने के योग्य</strong> है।", ta: "வழங்கப்பட்ட தரவுகளின் அடிப்படையில், தனிநபர் <strong>கடன் விண்ணப்பிக்க தகுதியுடையவர்</strong> என இதன் மூலம் சான்றளிக்கப்படுகிறது.", te: "అందించిన డేటా ఆధారంగా, ఈ వ్యక్తి <strong>రుణం కోసం దరఖాస్తు చేసుకోవడానికి అర్హుడు</strong> అని ఇందుమూలంగా ధృవీకరించడమైనది.", kn: "ಒದಗಿಸಿದ ಡೇಟಾದ ಆಧಾರದ ಮೇಲೆ, ಈ ವ್ಯಕ್ತಿ <strong>ಸಾಲಕ್ಕೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಲು ಅರ್ಹರು</strong> ಎಂದು ಇದರ ಮೂಲಕ ಪ್ರಮಾಣೀಕರಿಸಲಾಗಿದೆ." },
+    printedOn: { en: "PRINTED ON:", hi: "प्रिंट तिथि:", ta: "அச்சிடப்பட்ட தேதி:", te: "ముద్రించిన తేదీ:", kn: "ಮುದ್ರಿಸಿದ ದಿನಾಂಕ:" },
+    verifDetail: { en: "VERIFICATION DETAILS", hi: "सत्यापन विवरण", ta: "சரிபார்ப்பு விவரங்கள்", te: "ధృవీకరణ விவரాలు", kn: "ಪರಿಶೀಲನಾ ವಿವರಗಳು" },
+    verifSub: { en: "Document Verification Detail", hi: "दस्तावेज़ सत्यापन विवरण", ta: "ஆவண சரிபார்ப்பு விவரம்", te: "పత్రம் ధృవీకరణ వివరాలు", kn: "ದಾಖಲೆ ಪರಿಶೀಲನೆ ವಿವರ" },
+    validDays: { en: "Valid 90 days. Aadhaar Verified.", hi: "90 दिन वैध। आधार सत्यापित।", ta: "90 நாட்கள் செல்லும். ஆதார் சரிபார்க்கப்பட்டது.", te: "90 రోజులు చెల్లుతుంది. ఆధార్ ధృవీకరించబడింది.", kn: "90 ದಿನಗಳವರೆಗೆ ಮಾನ್ಯ सुದೆ. ಆಧಾರ್ ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿದೆ." },
+    rbiReg: { en: "TrustScore India Pvt Ltd (RBI Reg)", hi: "ट्रस्टस्कोर इंडिया प्राइवेट लिमिटेड (RBI पंजीकृत)", ta: "TrustScore India Pvt Ltd (RBI பதிவு)", te: "ట్రస్ట్ స్కోర్ ఇండియా ప్రైవేట్ లిమిటెడ్ (RBI రిజిస్టర్)", kn: "ಟ್ರಸ್ಟ್ ಸ್ಕೋರ್ ಇಂಡಿಯಾ ಪ್ರೈವೇಟ್ ಲಿಮಿಟೆಡ್ (RBI ನೋಂದಣಿ)" },
+    
+    // Doc Types
+    elecBill: { en: "Electricity Bills", hi: "बिजली बिल", ta: "மின்சார கட்டணம்", te: "విద్యుత్ బిల్లులు", kn: "ವಿದ್ಯುತ್ ಬಿಲ್" },
+    waterBill: { en: "Water Bills", hi: "पानी बिल", ta: "தண்ணீர் கட்டணம்", te: "నీటి బిల్లులు", kn: "ನೀರಿನ ಬಿಲ್" },
+    gasBill: { en: "Gas/Utility", hi: "गैस/उपयोगिता", ta: "எரிவாயு", te: "గ్యాస్ బిల్లులు", kn: "ಗ್ಯಾಸ್ ಬಿಲ್" },
+    mobBill: { en: "Mobile/Internet", hi: "मोबाइल/इंटरनेट", ta: "மொபைல்/இணையம்", te: "మొబైల్/ఇంటర్నెట్", kn: "ಮೊಬೈಲ್ ಬಿಲ್" },
+    filesTxt: { en: "files", hi: "फाइलें", ta: "கோப்புகள்", te: "పత్రాలు", kn: "ಕಡತಗಳು" }
 };
 
 const t = new Proxy(rawT, {
@@ -121,12 +161,12 @@ window.computeMemberMetrics = function(totalSpent, joinDate) {
     
     const docsUploaded = Math.floor(totalSpent / 850) + (daysActive < 10 ? 1 : 0);
 
-    // Dynamic Breakdown Generation
+    // Create a breakdown list based on totalSpent
     const docBreakdown = [
-        { type: "Electricity Bills", count: Math.ceil(docsUploaded * 0.4), val: Math.round(totalSpent * 0.45) },
-        { type: "Water Bills", count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.15) },
-        { type: "Gas/Utility", count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.25) },
-        { type: "Mobile/Internet", count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.15) }
+        { type: t.elecBill[appLang], count: Math.ceil(docsUploaded * 0.4), val: Math.round(totalSpent * 0.45) },
+        { type: t.waterBill[appLang], count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.15) },
+        { type: t.gasBill[appLang], count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.25) },
+        { type: t.mobBill[appLang], count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.15) }
     ];
 
     return { daysActive, avgSpend, score, docsUploaded, totalSpent, jd, joinDate, docBreakdown };
@@ -136,12 +176,12 @@ window.openProfile = function(name, totalSpent, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-fingerprint w-full h-full fade-in" style="justify-content: center;">
-            <button onclick="renderStage(currentStageIndex)" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 class="hindi-text mb-4 text-xl">Authenticate: ${name}</h2>
+            <button onclick="renderStage(currentStageIndex)" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> ${t.backBtn[appLang]}</button>
+            <h2 class="mb-4 text-xl">${t.authTitle[appLang]}: ${name}</h2>
             <div class="fp-ring scanning" id="mem-fp-ring">
                 <i class="fa-solid fa-fingerprint fp-icon" style="color: ${color}"></i>
             </div>
-            <div class="status-text text-primary text-sm" id="mem-fp-text">Place thumb to verify...</div>
+            <div class="status-text text-primary text-sm" id="mem-fp-text">${t.thumbInstruct[appLang]}</div>
         </div>
     `;
 
@@ -150,7 +190,7 @@ window.openProfile = function(name, totalSpent, color, joinDate) {
         if(ring) ring.classList.replace('scanning', 'success');
         const txt = document.getElementById('mem-fp-text');
         if(txt) {
-            txt.innerHTML = `<i class="fa-solid fa-check"></i> Identity Verified`;
+            txt.innerHTML = `<i class="fa-solid fa-check"></i> ${t.idVerified[appLang]}`;
             txt.classList.replace('text-primary', 'text-accent');
         }
         
@@ -188,7 +228,7 @@ window.showMemberDash = function(name, totalSpent, color, joinDate) {
 
     ks.innerHTML = `
         <div class="w-full h-full p-4 fade-in" style="background: #0b0f19; display: flex; flex-direction: column; justify-content: center; align-items: center; position:relative;">
-            <button onclick="renderStage(currentStageIndex)" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="renderStage(currentStageIndex)" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> ${t.backBtn[appLang]}</button>
             
             <div class="profile-photo mb-2" style="border-color:${color}; color:${color}">
                 <i class="fa-solid fa-user"></i>
@@ -197,23 +237,23 @@ window.showMemberDash = function(name, totalSpent, color, joinDate) {
             
             <div style="display:flex; justify-content:space-around; width:100%; margin: 1rem 0;">
                 <div class="text-center">
-                    <div class="text-xs text-muted">SCORE</div>
+                    <div class="text-xs text-muted" style="font-size:0.5rem">${t.scoreTxt[appLang]}</div>
                     <div class="text-lg font-space" id="dynamic-score" style="color:${color}">${score}</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-xs text-muted">STATUS</div>
+                    <div class="text-xs text-muted" style="font-size:0.5rem">${t.statusTxt[appLang]}</div>
                     <div class="text-sm font-space mt-1" style="color:${ratingColor}; background:rgba(255,255,255,0.05); padding: 2px 8px; border-radius:4px;">${rating}</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-xs text-muted">ACTIVE DAYS</div>
+                    <div class="text-xs text-muted" style="font-size:0.5rem">${t.activeDaysTxt[appLang]}</div>
                     <div class="text-lg font-space text-white">${daysActive}d</div>
                 </div>
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 80%;">
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberScore('${totalSpent}', '${color}', '${name}', '${joinDate}')"><i class="fa-solid fa-chart-pie mr-2"></i> Check Score Points</button>
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberUpload('${name}', '${totalSpent}', '${color}', '${joinDate}')"><i class="fa-solid fa-file-arrow-up mr-2"></i> Upload Documents</button>
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberPrint('${name}', '${totalSpent}', '${color}', '${joinDate}')"><i class="fa-solid fa-print mr-2"></i> Print Certificate</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberScore('${totalSpent}', '${color}', '${name}', '${joinDate}')"><i class="fa-solid fa-chart-pie mr-2"></i> ${t.checkPoints[appLang]}</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberUpload('${name}', '${totalSpent}', '${color}', '${joinDate}')"><i class="fa-solid fa-file-arrow-up mr-2"></i> ${t.uploadDocs[appLang]}</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberPrint('${name}', '${totalSpent}', '${color}', '${joinDate}')"><i class="fa-solid fa-print mr-2"></i> ${t.printCert[appLang]}</button>
             </div>
         </div>
     `;
@@ -225,15 +265,15 @@ window.openMemberScore = function(totalSpent, color, name, joinDate) {
 
     ks.innerHTML = `
         <div class="kiosk-score fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> ${t.backBtn[appLang]}</button>
             <div class="score-dial text-accent" style="--accent: ${color};">
                 <div class="dial-inner">
                     <div class="dial-number" id="mem-final-score" style="color: ${color}">0</div>
                     <div class="dial-max">/900</div>
                 </div>
             </div>
-            <div class="text-white font-space mt-2">Current TrustScore</div>
-            <div class="text-muted text-sm mt-2 text-center" style="max-width:80%">Upload more documents or verify bills to gradually increase your score.</div>
+            <div class="text-white font-space mt-2">${t.currentScore[appLang]}</div>
+            <div class="text-muted text-sm mt-2 text-center" style="max-width:80%">${t.moreDocs[appLang]}</div>
         </div>
     `;
     setTimeout(() => {
@@ -253,20 +293,20 @@ window.openMemberUpload = function(name, totalSpent, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-ocr fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 class="text-white mb-4 text-lg">Upload Alternative Data (e.g. Utility Bill)</h2>
+            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> ${t.backBtn[appLang]}</button>
+            <h2 class="text-white mb-4 text-lg">${t.altData[appLang]}</h2>
             <div class="doc-scan-area">
                 <i class="fa-solid fa-file-invoice text-4xl text-muted opacity-50"></i>
                 <div class="scan-laser" id="mem-scan-laser"></div>
             </div>
-            <div class="status-text text-primary text-sm mt-md" id="mem-ocr-status">SCANNING DOCUMENT...</div>
+            <div class="status-text text-primary text-sm mt-md" id="mem-ocr-status">${t.scanningDoc[appLang]}</div>
         </div>
     `;
     
     setTimeout(() => {
         const statusEl = document.getElementById('mem-ocr-status');
         if(statusEl) {
-            statusEl.innerHTML = `<i class="fa-solid fa-check"></i> Verified. Score Increased!`;
+            statusEl.innerHTML = `<i class="fa-solid fa-check"></i> ${t.docVerified[appLang]}`;
             statusEl.classList.replace('text-primary', 'text-accent');
         }
         const laser = document.getElementById('mem-scan-laser');
@@ -293,13 +333,52 @@ window.openMemberPrint = function(name, totalSpent, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-print fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', '${totalSpent}', '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> ${t.backBtn[appLang]}</button>
             <i class="fa-solid fa-print fa-4x text-primary mb-4" style="animation: pulse-border 1.5s infinite;"></i>
-            <h2 class="text-white mb-4 text-xl">Printing Certificate...</h2>
+            <h2 class="text-white mb-4 text-xl">${t.printingCert[appLang]}</h2>
         </div>
     `;
     
     setTimeout(() => {
+        // Page 1 Labels
+        const titles = document.querySelectorAll('.cert-title');
+        if(titles[0]) titles[0].innerText = t.certTitle[appLang];
+        if(titles[1]) titles[1].innerText = t.verifDetail[appLang];
+
+        const labels = document.querySelectorAll('.cert-label');
+        if(labels[0]) labels[0].innerText = t.certName[appLang];
+        if(labels[1]) labels[1].innerText = t.certReg[appLang];
+        if(labels[2]) labels[2].innerText = t.certDocs[appLang];
+        if(labels[3]) labels[3].innerText = t.certId[appLang];
+
+        const finLabels = document.querySelectorAll('.cert-finances span:first-child');
+        if(finLabels[0]) finLabels[0].innerText = t.totalVal[appLang];
+        if(finLabels[1]) finLabels[1].innerText = t.projMonthly[appLang];
+        if(finLabels[2]) finLabels[2].innerText = t.eligibility[appLang];
+
+        const eligibleMsgEl = document.querySelector('.cert-paper.page-2 p');
+        if(eligibleMsgEl) eligibleMsgEl.innerHTML = `
+            <i class="fa-solid fa-certificate" style="color: #f59e0b; margin-right: 0.5rem;"></i>
+            ${t.eligibleMsg[appLang]}
+        `;
+
+        const footerMeta = document.querySelectorAll('.cert-meta');
+        if(footerMeta[0]) {
+            footerMeta[0].innerHTML = `
+                <small>${t.validDays[appLang]}</small>
+                <small>${t.rbiReg[appLang]}</small>
+            `;
+        }
+        if(footerMeta[1]) {
+            footerMeta[1].innerHTML = `
+                <small style="font-weight: 700; color: #475569;">${t.printedOn[appLang]} <span id="print-cert-printed-on">${formatCustomDate(new Date())}</span></small>
+                <small>System Verified Audit: #AX-88219</small>
+            `;
+        }
+
+        const breakdownSub = document.querySelector('.cert-paper.page-2 h5');
+        if(breakdownSub) breakdownSub.innerText = t.verifSub[appLang];
+
         const pn = document.querySelector('.cert-name');
         const ps = document.querySelector('.cert-score');
         if(pn) pn.innerText = name;
@@ -312,7 +391,7 @@ window.openMemberPrint = function(name, totalSpent, color, joinDate) {
         if(docEl) docEl.innerText = meta.docsUploaded.toString();
         
         const stEl = document.getElementById('print-cert-status');
-        if(stEl) stEl.innerText = standing;
+        if(stEl) stEl.innerText = t.scoreGood[appLang]; 
         
         const totEl = document.getElementById('print-cert-total');
         if(totEl) totEl.innerText = '₹' + meta.totalSpent.toLocaleString('en-IN');
@@ -321,10 +400,12 @@ window.openMemberPrint = function(name, totalSpent, color, joinDate) {
         if(avgEl) avgEl.innerText = '₹' + meta.avgSpend.toLocaleString('en-IN');
         
         const loanEl = document.getElementById('print-cert-loan');
-        if(loanEl) loanEl.innerText = eligibility;
-
-        const prDateEl = document.getElementById('print-cert-printed-on');
-        if(prDateEl) prDateEl.innerText = formatCustomDate(new Date());
+        if(loanEl) {
+            let limit = "₹15,000";
+            if (meta.score > 700) limit = "₹1,50,000";
+            else if (meta.score > 400) limit = "₹50,000";
+            loanEl.innerText = (appLang === 'en' ? 'Up to ' : '') + limit;
+        }
 
         // Breakdown Population
         const listEl = document.getElementById('doc-breakdown-list');
@@ -332,7 +413,7 @@ window.openMemberPrint = function(name, totalSpent, color, joinDate) {
             listEl.innerHTML = meta.docBreakdown.map(d => `
                 <div class="doc-item">
                     <span class="doc-type">${d.type}</span>
-                    <span class="doc-count">(${d.count} files)</span>
+                    <span class="doc-count">(${d.count} ${t.filesTxt[appLang]})</span>
                     <span class="doc-val">₹${d.val.toLocaleString('en-IN')}</span>
                 </div>
             `).join('');
