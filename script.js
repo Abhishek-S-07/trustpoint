@@ -323,6 +323,9 @@ window.openMemberPrint = function(name, totalSpent, color, joinDate) {
         const loanEl = document.getElementById('print-cert-loan');
         if(loanEl) loanEl.innerText = eligibility;
 
+        const prDateEl = document.getElementById('print-cert-printed-on');
+        if(prDateEl) prDateEl.innerText = formatCustomDate(new Date());
+
         // Breakdown Population
         const listEl = document.getElementById('doc-breakdown-list');
         if(listEl) {
