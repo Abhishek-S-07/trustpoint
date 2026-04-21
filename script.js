@@ -749,11 +749,13 @@ window.onload = () => {
             if (certOutput.classList.contains('printing')) {
                 certOutput.classList.add('cert-fullscreen');
                 certOverlay.classList.add('active');
+                document.body.classList.add('cert-active-body');
             }
         });
         certOverlay.addEventListener('click', () => {
             certOutput.classList.remove('cert-fullscreen');
             certOverlay.classList.remove('active');
+            document.body.classList.remove('cert-active-body');
         });
     }
 };
