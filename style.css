@@ -278,7 +278,59 @@ body.cert-active-body .device-frame {
     font-size: 0.8rem;
     text-align: center;
     position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
+    width: 100%;
 }
+
+.cert-close-x {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    z-index: 10001;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 5px;
+}
+.cert-close-x:hover {
+    color: #ef4444;
+}
+
+.cert-page-break {
+    border-top: 2px dashed #cbd5e1;
+    margin: 2rem 0;
+    position: relative;
+}
+.cert-page-break::before {
+    content: "DETAILS ON NEXT PAGE";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f8fafc;
+    padding: 0 10px;
+    font-size: 0.6rem;
+    color: #64748b;
+}
+
+.doc-breakdown-list {
+    text-align: left;
+    margin-top: 1rem;
+}
+.doc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.doc-item:last-child { border-bottom: none; }
+.doc-type { font-weight: 700; color: #1e293b; }
+.doc-count { font-size: 0.75rem; color: #64748b; }
+.doc-val { font-weight: 700; color: #0f172a; }
 /* zig zag bottom for receipt */
 .cert-paper::after {
     content: "";

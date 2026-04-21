@@ -85,23 +85,38 @@ const t = new Proxy(rawT, {
     }
 });
 
+window.formatCustomDate = function(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}:${month}:${year}`;
+};
+
 window.computeMemberMetrics = function(totalSpent, joinDate) {
     const jd = new Date(joinDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
     const cd = new Date();
     const daysActive = Math.max(1, Math.floor((cd - jd) / (1000 * 60 * 60 * 24)));
-    const monthsActive = Math.max(1, daysActive / 30.4); // accurate average month divisor
+    const monthsActive = Math.max(1, daysActive / 30.4); 
     
-    // Core Math Module Computations
     const avgSpend = Math.round(totalSpent / monthsActive);
-    const activityBonus = Math.min(daysActive * 0.8, 150); // Up to 150 points for longevity
-    const financialBonus = Math.min((avgSpend / 100) * 12, 500); // Up to 500 for transaction history
+    const activityBonus = Math.min(daysActive * 0.8, 150); 
+    const financialBonus = Math.min((avgSpend / 100) * 12, 500); 
     
     let score = Math.floor(250 + activityBonus + financialBonus);
     if(score > 900) score = 900;
     
     const docsUploaded = Math.floor(totalSpent / 850) + (daysActive < 10 ? 1 : 0);
 
-    return { daysActive, avgSpend, score, docsUploaded, totalSpent, jd, joinDate };
+    // Create a breakdown list based on totalSpent
+    const docBreakdown = [
+        { type: "Electricity Bills", count: Math.ceil(docsUploaded * 0.4), val: Math.round(totalSpent * 0.45) },
+        { type: "Water Bills", count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.15) },
+        { type: "Gas/Utility", count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.25) },
+        { type: "Mobile/Internet", count: Math.ceil(docsUploaded * 0.2), val: Math.round(totalSpent * 0.15) }
+    ];
+
+    return { daysActive, avgSpend, score, docsUploaded, totalSpent, jd, joinDate, docBreakdown };
 };
 
 window.openProfile = function(name, totalSpent, color, joinDate) {
@@ -278,7 +293,7 @@ window.openMemberPrint = function(name, totalSpent, color, joinDate) {
         if(ps) ps.innerText = meta.score;
         
         const dtEl = document.getElementById('print-cert-date');
-        if(dtEl) dtEl.innerText = meta.jd.toLocaleDateString();
+        if(dtEl) dtEl.innerText = formatCustomDate(meta.jd);
         
         const docEl = document.getElementById('print-cert-docs');
         if(docEl) docEl.innerText = meta.docsUploaded.toString();
@@ -294,6 +309,18 @@ window.openMemberPrint = function(name, totalSpent, color, joinDate) {
         
         const loanEl = document.getElementById('print-cert-loan');
         if(loanEl) loanEl.innerText = eligibility;
+
+        // Breakdown Population
+        const listEl = document.getElementById('doc-breakdown-list');
+        if(listEl) {
+            listEl.innerHTML = meta.docBreakdown.map(d => `
+                <div class="doc-item">
+                    <span class="doc-type">${d.type}</span>
+                    <span class="doc-count">(${d.count} files)</span>
+                    <span class="doc-val">₹${d.val.toLocaleString('en-IN')}</span>
+                </div>
+            `).join('');
+        }
 
         const out = document.querySelector('.certificate-output');
         if(out) out.classList.add('printing');
@@ -836,6 +863,7 @@ window.onload = () => {
 
     if(certPaper && certOutput && certOverlay) {
         const certBackBtn = document.getElementById('cert-back-btn');
+        const certCloseX = document.getElementById('cert-close-x');
 
         certPaper.addEventListener('click', (e) => {
             if (certOutput.classList.contains('printing')) {
@@ -846,16 +874,15 @@ window.onload = () => {
             }
         });
 
-        const closeCert = () => {
+        const closeCert = (e) => {
+            if(e) e.stopPropagation();
             certOutput.classList.remove('cert-fullscreen');
             certOverlay.classList.remove('active');
             document.body.classList.remove('cert-active-body');
         };
 
         certOverlay.addEventListener('click', closeCert);
-        if(certBackBtn) certBackBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeCert();
-        });
+        if(certBackBtn) certBackBtn.addEventListener('click', closeCert);
+        if(certCloseX) certCloseX.addEventListener('click', closeCert);
     }
 };

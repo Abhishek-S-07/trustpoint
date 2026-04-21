@@ -75,6 +75,7 @@
             <!-- Hidden initially, sliding out -->
             <div class="certificate-output" id="certificate-output">
                 <div class="cert-paper">
+                    <button class="cert-close-x" id="cert-close-x" title="Close"><i class="fa-solid fa-xmark"></i></button>
                     <h4 class="cert-title">TRUSTSCORE CERTIFICATE</h4>
                     <div class="cert-details" style="display: grid; grid-template-columns: 1fr 1fr; gap:0.5rem; text-align:left; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
                         <div>
@@ -115,6 +116,14 @@
                             <span id="print-cert-loan" style="font-weight:bold; color:#059669; font-size:0.8rem">Up to ₹0</span>
                         </div>
                     </div>
+
+                    <!-- Page 2: Detailed Breakdown -->
+                    <div class="cert-page-break"></div>
+                    <h5 style="text-align:left; font-weight:800; text-transform:uppercase; margin-bottom:0.5rem; color:#475569; font-size:0.7rem;">Document Verification Detail</h5>
+                    <div class="doc-breakdown-list" id="doc-breakdown-list">
+                        <!-- Dynamic items -->
+                    </div>
+
                     <div class="cert-footer">
                         <div class="cert-qr"><i class="fa-solid fa-qrcode fa-3x"></i></div>
                         <div class="cert-meta">
