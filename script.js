@@ -835,17 +835,27 @@ window.onload = () => {
     const certOverlay = document.getElementById('cert-overlay');
 
     if(certPaper && certOutput && certOverlay) {
-        certPaper.addEventListener('click', () => {
+        const certBackBtn = document.getElementById('cert-back-btn');
+
+        certPaper.addEventListener('click', (e) => {
             if (certOutput.classList.contains('printing')) {
                 certOutput.classList.add('cert-fullscreen');
                 certOverlay.classList.add('active');
                 document.body.classList.add('cert-active-body');
+                e.stopPropagation(); // Prevent immediate closing if clicking paper
             }
         });
-        certOverlay.addEventListener('click', () => {
+
+        const closeCert = () => {
             certOutput.classList.remove('cert-fullscreen');
             certOverlay.classList.remove('active');
             document.body.classList.remove('cert-active-body');
+        };
+
+        certOverlay.addEventListener('click', closeCert);
+        if(certBackBtn) certBackBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeCert();
         });
     }
 };
