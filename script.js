@@ -85,7 +85,7 @@ const t = new Proxy(rawT, {
     }
 });
 
-window.openProfile = function(name, score, color) {
+window.openProfile = function(name, score, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-fingerprint w-full h-full fade-in" style="justify-content: center;">
@@ -108,14 +108,44 @@ window.openProfile = function(name, score, color) {
         }
         
         setTimeout(() => {
-            showMemberDash(name, score, color);
+            showMemberDash(name, score, color, joinDate);
         }, 1500);
     }, 2000);
 };
 
-window.showMemberDash = function(name, score, color) {
+window.showMemberDash = function(name, score, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     if(!ks) return;
+
+    // Calculate rating based on join date and score
+    // If they joined recently and have some score, they might still be rated "GOOD PROGRESS"
+    // Let's assume current date is roughly Oct 2024 for demo purposes.
+    const jd = new Date(joinDate);
+    const cd = new Date();
+    const daysActive = Math.max(1, Math.floor((cd - jd) / (1000 * 60 * 60 * 24)));
+    
+    let rating = "POOR";
+    let ratingColor = "#ef4444";
+    
+    const parsedScore = parseInt(score);
+    if(daysActive < 10) {
+        // Joined < 10 days ago (a week ago)
+        rating = parsedScore > 300 ? "GOOD PROGRESS" : "NEWBIE";
+        ratingColor = parsedScore > 300 ? "#10b981" : "#f59e0b";
+    } else if (daysActive < 60) {
+        // Joined < 60 days ago
+        if(parsedScore > 600) rating = "EXCELLENT";
+        else if (parsedScore > 400) rating = "GOOD PROGRESS";
+        else rating = "MEDIUM";
+        ratingColor = parsedScore > 600 ? "#10b981" : (parsedScore > 400 ? "#3b82f6" : "#f59e0b");
+    } else {
+        // Older accounts
+        if(parsedScore > 750) { rating = "EXCELLENT"; ratingColor = "#10b981"; }
+        else if(parsedScore > 500) { rating = "GOOD"; ratingColor = "#3b82f6"; }
+        else if(parsedScore > 350) { rating = "MEDIUM"; ratingColor = "#f59e0b"; }
+        else { rating = "BAD"; ratingColor = "#ef4444"; }
+    }
+
     ks.innerHTML = `
         <div class="w-full h-full p-4 fade-in" style="background: #0b0f19; display: flex; flex-direction: column; justify-content: center; align-items: center; position:relative;">
             <button onclick="renderStage(currentStageIndex)" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
@@ -124,22 +154,36 @@ window.showMemberDash = function(name, score, color) {
                 <i class="fa-solid fa-user"></i>
             </div>
             <h3 class="text-white text-xl font-space">${name}</h3>
-            <div class="text-muted text-sm mb-4">Base Score: <span id="dynamic-score">${score}</span></div>
+            
+            <div style="display:flex; justify-content:space-around; width:100%; margin: 1rem 0;">
+                <div class="text-center">
+                    <div class="text-xs text-muted">SCORE</div>
+                    <div class="text-lg font-space" id="dynamic-score" style="color:${color}">${score}</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xs text-muted">STATUS</div>
+                    <div class="text-sm font-space mt-1" style="color:${ratingColor}; background:rgba(255,255,255,0.05); padding: 2px 8px; border-radius:4px;">${rating}</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xs text-muted">ACTIVE DAYS</div>
+                    <div class="text-lg font-space text-white">${daysActive}d</div>
+                </div>
+            </div>
             
             <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 80%;">
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberScore(${score}, '${color}', '${name}')"><i class="fa-solid fa-chart-pie mr-2"></i> Check Score Points</button>
-                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberUpload('${name}', ${score}, '${color}')"><i class="fa-solid fa-file-arrow-up mr-2"></i> Upload Documents</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberScore(${score}, '${color}', '${name}', '${joinDate}')"><i class="fa-solid fa-chart-pie mr-2"></i> Check Score Points</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberUpload('${name}', ${score}, '${color}', '${joinDate}')"><i class="fa-solid fa-file-arrow-up mr-2"></i> Upload Documents</button>
                 <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberPrint('${name}', ${score}, '${color}')"><i class="fa-solid fa-print mr-2"></i> Print Certificate</button>
             </div>
         </div>
     `;
 };
 
-window.openMemberScore = function(score, color, name) {
+window.openMemberScore = function(score, color, name, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-score fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', ${score}, '${color}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', ${score}, '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <div class="score-dial text-accent" style="--accent: ${color};">
                 <div class="dial-inner">
                     <div class="dial-number" id="mem-final-score" style="color: ${color}">0</div>
@@ -163,11 +207,11 @@ window.openMemberScore = function(score, color, name) {
     }, 100);
 }
 
-window.openMemberUpload = function(name, score, color) {
+window.openMemberUpload = function(name, score, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-ocr fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', ${score}, '${color}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', ${score}, '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h2 class="text-white mb-4 text-lg">Upload Alternative Data (e.g. Utility Bill)</h2>
             <div class="doc-scan-area">
                 <i class="fa-solid fa-file-invoice text-4xl text-muted opacity-50"></i>
@@ -190,16 +234,16 @@ window.openMemberUpload = function(name, score, color) {
         if (newScore > 900) newScore = 900;
         setTimeout(() => {
             let newColor = newScore > 700 ? '#10b981' : (newScore > 400 ? '#3b82f6' : '#f59e0b');
-            showMemberDash(name, newScore, newColor);
+            showMemberDash(name, newScore, newColor, joinDate);
         }, 2000);
     }, 2500);
 }
 
-window.openMemberPrint = function(name, score, color) {
+window.openMemberPrint = function(name, score, color, joinDate) {
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-print fade-in" style="position:relative;">
-            <button onclick="showMemberDash('${name}', ${score}, '${color}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="showMemberDash('${name}', ${score}, '${color}', '${joinDate}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <i class="fa-solid fa-print fa-4x text-primary mb-4" style="animation: pulse-border 1.5s infinite;"></i>
             <h2 class="text-white mb-4 text-xl">Printing Certificate...</h2>
         </div>
@@ -268,32 +312,32 @@ const stages = [
                     </div>
                     
                     <div class="db-grid">
-                        <div class="db-card" onclick="openProfile('Rahul Kumar', '320', '#f59e0b')">
+                        <div class="db-card" onclick="openProfile('Rahul Kumar', '320', '#f59e0b', '2024-04-10')">
                             <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Rahul Kumar</div>
                                 <div class="db-score text-warning">${t.scoreTxt[appLang]} 320</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Anjali Gupta', '410', '#3b82f6')">
+                        <div class="db-card" onclick="openProfile('Anjali Gupta', '410', '#3b82f6', '2023-11-20')">
                             <div class="db-avatar" style="border: 2px solid #3b82f6; color: #3b82f6"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Anjali Gupta</div>
                                 <div class="db-score text-primary">${t.scoreTxt[appLang]} 410</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Sunil Das', '250', '#ef4444')">
+                        <div class="db-card" onclick="openProfile('Sunil Das', '250', '#ef4444', '2022-01-05')">
                             <div class="db-avatar" style="border: 2px solid #ef4444; color: #ef4444"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Sunil Das</div>
                                 <div class="db-score" style="color:#ef4444">${t.scoreTxt[appLang]} 250</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Meena Devi', '380', '#f59e0b')">
-                            <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
+                        <div class="db-card" onclick="openProfile('Meena Devi', '380', '#10b981', '${new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
+                            <div class="db-avatar" style="border: 2px solid #10b981; color: #10b981"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Meena Devi</div>
-                                <div class="db-score text-warning">${t.scoreTxt[appLang]} 380</div>
+                                <div class="db-score text-accent">${t.scoreTxt[appLang]} 380 <span style="font-size:0.6rem;opacity:0.7">(New)</span></div>
                             </div>
                         </div>
                     </div>
