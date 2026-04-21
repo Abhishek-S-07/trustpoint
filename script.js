@@ -240,6 +240,23 @@ window.openMemberUpload = function(name, score, color, joinDate) {
 }
 
 window.openMemberPrint = function(name, score, color, joinDate) {
+    // Dynamic mock math
+    const jd = new Date(joinDate || new Date(Date.now() - 30*24*60*60*1000));
+    const cd = new Date();
+    const daysActive = Math.max(1, Math.floor((cd - jd) / (1000 * 60 * 60 * 24)));
+    const monthsActive = Math.max(1, daysActive / 30);
+    
+    let parsedScore = parseInt(score);
+    const docsUploaded = Math.floor(parsedScore / 90) + (daysActive < 10 ? 1 : 0);
+    const totalValue = Math.floor(parsedScore * 135.5 + (Math.random()*1000));
+    const avgSpend = Math.floor(totalValue / monthsActive);
+    
+    let eligibility = "Up to ₹15,000";
+    let standing = "POOR STANDING";
+    if (parsedScore > 700) { eligibility = "Up to ₹1,50,000"; standing = "EXCELLENT STANDING"; }
+    else if (parsedScore > 400) { eligibility = "Up to ₹50,000"; standing = "GOOD PROGRESS"; }
+    else if (daysActive < 15) { eligibility = "Up to ₹10,000 (Newbie)"; standing = "BUILDING PROFILE"; }
+
     const ks = document.getElementById('kiosk-screen');
     ks.innerHTML = `
         <div class="kiosk-print fade-in" style="position:relative;">
@@ -255,6 +272,24 @@ window.openMemberPrint = function(name, score, color, joinDate) {
         if(pn) pn.innerText = name;
         if(ps) ps.innerText = score;
         
+        const dtEl = document.getElementById('print-cert-date');
+        if(dtEl) dtEl.innerText = jd.toLocaleDateString();
+        
+        const docEl = document.getElementById('print-cert-docs');
+        if(docEl) docEl.innerText = docsUploaded.toString();
+        
+        const stEl = document.getElementById('print-cert-status');
+        if(stEl) stEl.innerText = standing;
+        
+        const totEl = document.getElementById('print-cert-total');
+        if(totEl) totEl.innerText = '₹' + totalValue.toLocaleString('en-IN');
+        
+        const avgEl = document.getElementById('print-cert-avg');
+        if(avgEl) avgEl.innerText = '₹' + avgSpend.toLocaleString('en-IN');
+        
+        const loanEl = document.getElementById('print-cert-loan');
+        if(loanEl) loanEl.innerText = eligibility;
+
         const out = document.querySelector('.certificate-output');
         if(out) out.classList.add('printing');
     }, 500);
@@ -312,21 +347,21 @@ const stages = [
                     </div>
                     
                     <div class="db-grid">
-                        <div class="db-card" onclick="openProfile('Rahul Kumar', '320', '#f59e0b', '2024-04-10')">
+                        <div class="db-card" onclick="openProfile('Rahul Kumar', '320', '#f59e0b', '${new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
                             <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Rahul Kumar</div>
                                 <div class="db-score text-warning">${t.scoreTxt[appLang]} 320</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Anjali Gupta', '410', '#3b82f6', '2023-11-20')">
+                        <div class="db-card" onclick="openProfile('Anjali Gupta', '410', '#3b82f6', '${new Date(Date.now() - 80 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
                             <div class="db-avatar" style="border: 2px solid #3b82f6; color: #3b82f6"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Anjali Gupta</div>
                                 <div class="db-score text-primary">${t.scoreTxt[appLang]} 410</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Sunil Das', '250', '#ef4444', '2022-01-05')">
+                        <div class="db-card" onclick="openProfile('Sunil Das', '250', '#ef4444', '${new Date(Date.now() - 150 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}')">
                             <div class="db-avatar" style="border: 2px solid #ef4444; color: #ef4444"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Sunil Das</div>

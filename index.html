@@ -72,17 +72,45 @@
             <div class="certificate-output" id="certificate-output">
                 <div class="cert-paper">
                     <h4 class="cert-title">TRUSTSCORE CERTIFICATE</h4>
-                    <div class="cert-details">
-                        <p class="cert-name">Priya Sharma</p>
-                        <p class="cert-id">TS-2024-MH-004821</p>
+                    <div class="cert-details" style="display: grid; grid-template-columns: 1fr 1fr; gap:0.5rem; text-align:left; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                        <div>
+                            <p class="cert-label text-xs text-muted" style="font-size:0.6rem">NAME</p>
+                            <p class="cert-name" style="font-weight:600">Priya Sharma</p>
+                        </div>
+                        <div>
+                            <p class="cert-label text-xs text-muted" style="font-size:0.6rem">REGISTERED</p>
+                            <p id="print-cert-date" style="font-weight:600; font-size:0.8rem">2024-04-10</p>
+                        </div>
+                        <div>
+                            <p class="cert-label text-xs text-muted" style="font-size:0.6rem">DOCS UPLOADED</p>
+                            <p id="print-cert-docs" style="font-weight:600; font-size:0.8rem">11</p>
+                        </div>
+                        <div>
+                            <p class="cert-label text-xs text-muted" style="font-size:0.6rem">ID NUMBER</p>
+                            <p class="cert-id" style="font-size:0.8rem">TS-004821</p>
+                        </div>
                     </div>
-                    <div class="cert-score-wrap">
+                    
+                    <div class="cert-score-wrap" style="margin: 0.5rem 0;">
                         <div class="cert-score">742</div>
                         <div class="cert-max">/900</div>
                     </div>
-                    <div class="cert-status">GOOD STANDING</div>
-                    <div class="cert-info">Credit: ₹25,000 - ₹75,000</div>
-                    <div class="cert-info">Rate: 14% - 18% APR</div>
+                    <div class="cert-status" id="print-cert-status" style="margin-bottom:0.5rem">GOOD STANDING</div>
+                    
+                    <div class="cert-finances" style="background:#f1f5f9; padding:0.5rem; border-radius:4px; margin-bottom:1rem; text-align:left;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                            <span style="font-size:0.65rem; color:#475569">Total Document Value:</span>
+                            <span id="print-cert-total" style="font-weight:bold; color:#0f172a; font-size:0.75rem">₹0</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                            <span style="font-size:0.65rem; color:#475569">Avg. Spend/Month:</span>
+                            <span id="print-cert-avg" style="font-weight:bold; color:#0f172a; font-size:0.75rem">₹0</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-top:4px; border-top:1px solid #cbd5e1; padding-top:4px;">
+                            <span style="font-size:0.7rem; color:#059669; font-weight:bold;">Eligibility:</span>
+                            <span id="print-cert-loan" style="font-weight:bold; color:#059669; font-size:0.8rem">Up to ₹0</span>
+                        </div>
+                    </div>
                     <div class="cert-footer">
                         <div class="cert-qr"><i class="fa-solid fa-qrcode fa-3x"></i></div>
                         <div class="cert-meta">
