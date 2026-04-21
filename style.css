@@ -324,6 +324,70 @@ body {
    KIOSK SCREEN INNER SCREENS (DYNAMIC CONTENT)
    ========================================================= */
 
+.kiosk-database {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    padding: 1.5rem; background: #0b0f19;
+    animation: fade-in 0.5s ease-out forwards;
+}
+.db-header {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1rem;
+}
+.db-title { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; color: white;}
+.btn-add-member {
+    background: var(--primary); color: white; border: none;
+    padding: 0.5rem 1.25rem; border-radius: 50px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); transition: transform 0.2s;
+}
+.btn-add-member:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+
+.db-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    overflow-y: auto; padding-right: 0.5rem;
+}
+.db-grid::-webkit-scrollbar { width: 6px; }
+.db-grid::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+.db-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+.db-card {
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 1rem;
+    cursor: pointer; transition: all 0.2s;
+}
+.db-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+.db-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.5rem; font-weight: bold; color: white;
+}
+.db-info { text-align: left; }
+.db-name { font-weight: 600; font-size: 0.9rem; color: white; margin-bottom: 0.25rem; }
+.db-score { font-family: 'Space Grotesk'; font-size: 0.75rem; font-weight: 700; }
+
+.profile-modal {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.profile-modal.show { opacity: 1; pointer-events: all; }
+.profile-modal-content {
+    background: #111827; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; width: 85%; padding: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); position: relative;
+    transform: translateY(20px); transition: transform 0.3s; text-align: left;
+}
+.profile-modal.show .profile-modal-content { transform: translateY(0); }
+.close-modal { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #94a3b8; font-size: 1.25rem; cursor: pointer; }
+.profile-hdr { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+.profile-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.metric-box { background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+.metric-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.25rem; }
+.metric-val { font-size: 1.1rem; font-family: 'Space Grotesk'; font-weight: 700; color: white; }
+
 .kiosk-welcome, .kiosk-fingerprint, .kiosk-ocr, .kiosk-nfc, .kiosk-voice, .kiosk-sync, .kiosk-score, .kiosk-print {
     width: 100%;
     height: 100%;

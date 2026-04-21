@@ -5,13 +5,24 @@ window.changeLang = function(lang) {
     renderStage(currentStageIndex);
 };
 
-const t = {
+// Fallback proxy for translations
+const rawT = {
     // Stage 1
-    welcomeTitle: { hi: "नमस्ते<br>अपना स्कोर बनाएं", en: "Welcome<br>Build Your Score" },
-    welcomeSub: { hi: "भाषा चुनें / Choose Language", en: "Choose Language / भाषा चुनें" },
+    welcomeTitle: { hi: "नमस्ते<br>अपना स्कोर बनाएं", en: "Welcome<br>Build Your Score", ta: "வரவேற்கிறோம்<br>மதிப்பீட்டை உருவாக்கவும்", te: "స్వాగతం<br>మీ స్కోర్‌ను నిర్మించండి", kn: "ಸ್ವಾಗತ<br>ನಿಮ್ಮ ಸ್ಕೋರ್ ನಿರ್ಮಿಸಿ" },
+    welcomeSub: { hi: "भाषा चुनें / Choose Language", en: "Choose Language / भाषा चुनें", ta: "மொழியைத் தேர்ந்தெடுக்கவும்", te: "భాషను ఎంచుకోండి", kn: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ" },
     hiBtn: { hi: "हिंदी", en: "हिंदी" },
     enBtn: { hi: "English", en: "English" },
-    voiceActive: { hi: "वॉयस गाइडेंस सक्रिय", en: "Voice Guidance Active" },
+    taBtn: { hi: "தமிழ்", en: "தமிழ்", ta: "தமிழ்" },
+    teBtn: { hi: "తెలుగు", en: "తెలుగు", te: "తెలుగు" },
+    knBtn: { hi: "ಕನ್ನಡ", en: "ಕನ್ನಡ", kn: "ಕನ್ನಡ" },
+    voiceActive: { hi: "वॉयस गाइडेंस सक्रिय", en: "Voice Guidance Active", ta: "குரல் வழிகாட்டுதல்", te: "వాయిస్ గైడెన్స్", kn: "ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ" },
+
+    // DB Stage
+    memberDb: { en: "Member Database", hi: "सदस्य डेटाबेस", ta: "உறுப்பினர் தரவுத்தளம்", te: "సభ్యుల డేటాబేస్", kn: "ಸದಸ್ಯರ ಡೇಟಾಬೇಸ್" },
+    addMember: { en: "Add Member", hi: "सदस्य जोड़ें", ta: "உறுப்பினரைச் சேர்", te: "సభ్యుడిని చేర్చండి", kn: "ಸದಸ್ಯರನ್ನು ಸೇರಿಸಿ" },
+    scoreTxt: { en: "SCORE", hi: "स्कोर", ta: "மதிப்பெண்", te: "స్కోర్", kn: "ಸ್ಕೋರ್" },
+    profileTxt: { en: "Profile", hi: "प्रोफ़ाइल", ta: "சுயவிவரம்", te: "ప్రొఫైల్", kn: "ಪ್ರೊಫೈಲ್" },
+    closeTxt: { en: "Close", hi: "बंद करें", ta: "மூடு", te: "మూసివేయు", kn: "ಮುಚ್ಚಿ" },
 
     // Stage 2 & 3
     fpInstruct: { hi: "अपना अंगूठा यहाँ रखें", en: "Place Your Thumb Here" },
@@ -19,6 +30,7 @@ const t = {
     fpStored: { hi: "पहचान सुरक्षित और सत्यापित", en: "IDENTITY STORED & VERIFIED" },
     docInstruct: { hi: "बिजली बिल यहाँ अपलोड करें", en: "Upload Electricity Bill Here" },
     docSuccess: { hi: "भुगतान इतिहास सत्यापित", en: "PAYMENT HISTORY VERIFIED" },
+    docWait: { hi: "सत्यापन...", en: "VERIFYING..." },
     signedIn: { hi: "साइन इन: प्रिया शर्मा", en: "SIGNED IN: PRIYA S." },
 
     // Stage 4
@@ -27,6 +39,7 @@ const t = {
     nfcSuccess: { hi: "जनसांख्यिकीय डेटा सुरक्षित", en: "DEMOGRAPHIC DATA SECURED" },
 
     // Stage 5
+    voiceInstruct: { hi: "प्रश्नों के उत्तर दें", en: "Answer the questions" },
     vQ1: { hi: "Q: लोन किस चीज़ के लिए चाहिए?", en: "Q: What do you need the loan for?" },
     vA1: { hi: "A: सिलाई मशीन खरीदनी है", en: "A: To buy a sewing machine" },
     vQ2: { hi: "Q: लोन कितने समय में वापस करेंगी?", en: "Q: In how long will you repay?" },
@@ -61,6 +74,33 @@ const t = {
     endMsg: { hi: "वित्तीय समावेशन पूर्ण।", en: "Financial Inclusion Complete." }
 };
 
+const t = new Proxy(rawT, {
+    get: function(target, prop) {
+        if (!target[prop]) return new Proxy({}, { get: () => prop });
+        return new Proxy(target[prop], {
+            get: function(subTarget, subProp) {
+                return subTarget[subProp] || subTarget['en'] || "Text";
+            }
+        });
+    }
+});
+
+window.openProfile = function(name, score, color) {
+    const modal = document.getElementById('profile-modal');
+    if(!modal) return;
+    document.getElementById('pm-name').innerText = name;
+    document.getElementById('pm-score').innerText = score;
+    document.getElementById('pm-avatar').style.border = '2px solid ' + color;
+    document.getElementById('pm-avatar').style.color = color;
+    document.getElementById('pm-initial').innerText = name.charAt(0);
+    modal.classList.add('show');
+};
+
+window.closeProfile = function() {
+    const modal = document.getElementById('profile-modal');
+    if(modal) modal.classList.remove('show');
+};
+
 const stages = [
     {
         id: 1,
@@ -79,12 +119,96 @@ const stages = [
                     <h2 class="hindi-text mb-2 text-primary">${t.welcomeTitle[appLang]}</h2>
                     <p class="text-white text-sm uppercase tracking-wide mt-md border border-gray-700 px-4 py-2 rounded-full">${t.welcomeSub[appLang]}</p>
                     
-                    <div class="lang-selector">
+                    <div class="lang-selector" style="flex-wrap: wrap; margin-top: 1.5rem; justify-content: center;">
                         <button class="kiosk-lang-btn ${appLang === 'en' ? 'active' : ''}" onclick="changeLang('en')">${t.enBtn[appLang]}</button>
                         <button class="kiosk-lang-btn ${appLang === 'hi' ? 'active' : ''}" onclick="changeLang('hi')">${t.hiBtn[appLang]}</button>
+                        <button class="kiosk-lang-btn ${appLang === 'ta' ? 'active' : ''}" onclick="changeLang('ta')">${t.taBtn[appLang]}</button>
+                        <button class="kiosk-lang-btn ${appLang === 'te' ? 'active' : ''}" onclick="changeLang('te')">${t.teBtn[appLang]}</button>
+                        <button class="kiosk-lang-btn ${appLang === 'kn' ? 'active' : ''}" onclick="changeLang('kn')">${t.knBtn[appLang]}</button>
                     </div>
 
                     <div class="mt-lg text-muted text-sm"><i class="fa-solid fa-volume-high"></i> ${t.voiceActive[appLang]}</div>
+                </div>
+            `;
+        }
+    },
+    {
+        id: "db",
+        title: "Member Database Access",
+        time: "1 min",
+        desc: "The CSC Operator views the local TrustScore database. They can access profiles of existing verified members or add a new unbanked member. For Priya's demo, they select 'Add Member'.",
+        tech: [
+            "Local decentralized database node view.",
+            "Visualized trust metrics for operator dashboard."
+        ],
+        hwModule: null,
+        kioskScript: (container) => {
+            container.innerHTML = `
+                <div class="kiosk-database">
+                    <div class="db-header">
+                        <div class="db-title"><i class="fa-solid fa-users text-primary"></i> ${t.memberDb[appLang]}</div>
+                        <button class="btn-add-member" onclick="document.getElementById('btn-next').click()">
+                            <i class="fa-solid fa-plus"></i> ${t.addMember[appLang]}
+                        </button>
+                    </div>
+                    
+                    <div class="db-grid">
+                        <div class="db-card" onclick="openProfile('Rahul Kumar', '780', '#10b981')">
+                            <div class="db-avatar" style="border: 2px solid #10b981; color: #10b981"><i class="fa-solid fa-user"></i></div>
+                            <div class="db-info">
+                                <div class="db-name">Rahul Kumar</div>
+                                <div class="db-score text-accent">${t.scoreTxt[appLang]} 780</div>
+                            </div>
+                        </div>
+                        <div class="db-card" onclick="openProfile('Anjali Gupta', '610', '#3b82f6')">
+                            <div class="db-avatar" style="border: 2px solid #3b82f6; color: #3b82f6"><i class="fa-solid fa-user"></i></div>
+                            <div class="db-info">
+                                <div class="db-name">Anjali Gupta</div>
+                                <div class="db-score text-primary">${t.scoreTxt[appLang]} 610</div>
+                            </div>
+                        </div>
+                        <div class="db-card" onclick="openProfile('Sunil Das', '450', '#f59e0b')">
+                            <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
+                            <div class="db-info">
+                                <div class="db-name">Sunil Das</div>
+                                <div class="db-score text-warning">${t.scoreTxt[appLang]} 450</div>
+                            </div>
+                        </div>
+                        <div class="db-card" onclick="openProfile('Meena Devi', '820', '#10b981')">
+                            <div class="db-avatar" style="border: 2px solid #10b981; color: #10b981"><i class="fa-solid fa-user"></i></div>
+                            <div class="db-info">
+                                <div class="db-name">Meena Devi</div>
+                                <div class="db-score text-accent">${t.scoreTxt[appLang]} 820</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Modal inside device -->
+                    <div class="profile-modal" id="profile-modal">
+                        <div class="profile-modal-content">
+                            <button class="close-modal" onclick="closeProfile()"><i class="fa-solid fa-times"></i></button>
+                            <div class="profile-hdr">
+                                <div class="db-avatar" id="pm-avatar" style="width: 60px; height: 60px; font-size: 2rem;"><span id="pm-initial"></span></div>
+                                <div>
+                                    <h3 class="text-white text-lg font-space" id="pm-name">Name</h3>
+                                    <div class="text-sm text-muted">${t.profileTxt[appLang]}</div>
+                                </div>
+                            </div>
+                            <div class="profile-metrics">
+                                <div class="metric-box">
+                                    <div class="metric-label">TRUSTSCORE</div>
+                                    <div class="metric-val" id="pm-score">000</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-label">STATUS</div>
+                                    <div class="metric-val text-accent" style="font-size:0.9rem">ACTIVE</div>
+                                </div>
+                            </div>
+                            <button class="btn-add-member mt-md" style="width:100%; justify-content:center; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); box-shadow:none;" onclick="closeProfile()">
+                                ${t.closeTxt[appLang]}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             `;
         }
@@ -460,8 +584,8 @@ function renderStage(index) {
     const stage = stages[index];
     
     // Update Indicators
-    document.getElementById('stage-number').innerText = `Stage ${stage.id} of ${stages.length}`;
-    document.getElementById('progress-bar').style.width = `${(stage.id / stages.length) * 100}%`;
+    document.getElementById('stage-number').innerText = `Stage ${index + 1} of ${stages.length}`;
+    document.getElementById('progress-bar').style.width = `${((index + 1) / stages.length) * 100}%`;
     
     // Narrative Content
     document.getElementById('stage-title').innerText = stage.title;
@@ -483,8 +607,8 @@ function renderStage(index) {
         document.getElementById(stage.hwModule).classList.add('active');
     }
     
-    // Reset printer output if not on stage 10/11
-    if (stage.id < 10) {
+    // Reset printer output if not on printing stage
+    if (stage.title !== "Certificate Printing" && stage.title !== "Lender Verification & Loan") {
         document.querySelector('.certificate-output').classList.remove('printing');
     }
     
