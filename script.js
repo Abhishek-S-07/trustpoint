@@ -738,4 +738,22 @@ document.getElementById('btn-prev').addEventListener('click', () => {
 // Init
 window.onload = () => {
     renderStage(0);
+
+    // Certificate Zoom Logic
+    const certPaper = document.querySelector('.cert-paper');
+    const certOutput = document.getElementById('certificate-output');
+    const certOverlay = document.getElementById('cert-overlay');
+
+    if(certPaper && certOutput && certOverlay) {
+        certPaper.addEventListener('click', () => {
+            if (certOutput.classList.contains('printing')) {
+                certOutput.classList.add('cert-fullscreen');
+                certOverlay.classList.add('active');
+            }
+        });
+        certOverlay.addEventListener('click', () => {
+            certOutput.classList.remove('cert-fullscreen');
+            certOverlay.classList.remove('active');
+        });
+    }
 };
