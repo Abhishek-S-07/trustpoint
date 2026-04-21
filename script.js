@@ -86,20 +86,135 @@ const t = new Proxy(rawT, {
 });
 
 window.openProfile = function(name, score, color) {
-    const modal = document.getElementById('profile-modal');
-    if(!modal) return;
-    document.getElementById('pm-name').innerText = name;
-    document.getElementById('pm-score').innerText = score;
-    document.getElementById('pm-avatar').style.border = '2px solid ' + color;
-    document.getElementById('pm-avatar').style.color = color;
-    document.getElementById('pm-initial').innerText = name.charAt(0);
-    modal.classList.add('show');
+    const ks = document.getElementById('kiosk-screen');
+    ks.innerHTML = `
+        <div class="kiosk-fingerprint w-full h-full fade-in" style="justify-content: center;">
+            <button onclick="renderStage(currentStageIndex)" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 class="hindi-text mb-4 text-xl">Authenticate: ${name}</h2>
+            <div class="fp-ring scanning" id="mem-fp-ring">
+                <i class="fa-solid fa-fingerprint fp-icon" style="color: ${color}"></i>
+            </div>
+            <div class="status-text text-primary text-sm" id="mem-fp-text">Place thumb to verify...</div>
+        </div>
+    `;
+
+    setTimeout(() => {
+        const ring = document.getElementById('mem-fp-ring');
+        if(ring) ring.classList.replace('scanning', 'success');
+        const txt = document.getElementById('mem-fp-text');
+        if(txt) {
+            txt.innerHTML = `<i class="fa-solid fa-check"></i> Identity Verified`;
+            txt.classList.replace('text-primary', 'text-accent');
+        }
+        
+        setTimeout(() => {
+            showMemberDash(name, score, color);
+        }, 1500);
+    }, 2000);
 };
 
-window.closeProfile = function() {
-    const modal = document.getElementById('profile-modal');
-    if(modal) modal.classList.remove('show');
+window.showMemberDash = function(name, score, color) {
+    const ks = document.getElementById('kiosk-screen');
+    if(!ks) return;
+    ks.innerHTML = `
+        <div class="w-full h-full p-4 fade-in" style="background: #0b0f19; display: flex; flex-direction: column; justify-content: center; align-items: center; position:relative;">
+            <button onclick="renderStage(currentStageIndex)" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            
+            <div class="profile-photo mb-2" style="border-color:${color}; color:${color}">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <h3 class="text-white text-xl font-space">${name}</h3>
+            <div class="text-muted text-sm mb-4">Base Score: <span id="dynamic-score">${score}</span></div>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 80%;">
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberScore(${score}, '${color}', '${name}')"><i class="fa-solid fa-chart-pie mr-2"></i> Check Score Points</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberUpload('${name}', ${score}, '${color}')"><i class="fa-solid fa-file-arrow-up mr-2"></i> Upload Documents</button>
+                <button class="kiosk-lang-btn text-left" style="padding-left:1.5rem;" onclick="openMemberPrint('${name}', ${score}, '${color}')"><i class="fa-solid fa-print mr-2"></i> Print Certificate</button>
+            </div>
+        </div>
+    `;
 };
+
+window.openMemberScore = function(score, color, name) {
+    const ks = document.getElementById('kiosk-screen');
+    ks.innerHTML = `
+        <div class="kiosk-score fade-in" style="position:relative;">
+            <button onclick="showMemberDash('${name}', ${score}, '${color}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <div class="score-dial text-accent" style="--accent: ${color};">
+                <div class="dial-inner">
+                    <div class="dial-number" id="mem-final-score" style="color: ${color}">0</div>
+                    <div class="dial-max">/900</div>
+                </div>
+            </div>
+            <div class="text-white font-space mt-2">Current TrustScore</div>
+            <div class="text-muted text-sm mt-2 text-center" style="max-width:80%">Upload more documents or verify bills to gradually increase your score.</div>
+        </div>
+    `;
+    setTimeout(() => {
+        const scoreEl = document.getElementById('mem-final-score');
+        if(!scoreEl) return;
+        let c = 0;
+        let target = parseInt(score);
+        let int = setInterval(()=>{
+            c += Math.ceil(target/15);
+            if(c >= target) { clearInterval(int); scoreEl.innerText = target; }
+            else scoreEl.innerText = c;
+        }, 40);
+    }, 100);
+}
+
+window.openMemberUpload = function(name, score, color) {
+    const ks = document.getElementById('kiosk-screen');
+    ks.innerHTML = `
+        <div class="kiosk-ocr fade-in" style="position:relative;">
+            <button onclick="showMemberDash('${name}', ${score}, '${color}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 class="text-white mb-4 text-lg">Upload Alternative Data (e.g. Utility Bill)</h2>
+            <div class="doc-scan-area">
+                <i class="fa-solid fa-file-invoice text-4xl text-muted opacity-50"></i>
+                <div class="scan-laser" id="mem-scan-laser"></div>
+            </div>
+            <div class="status-text text-primary text-sm mt-md" id="mem-ocr-status">SCANNING DOCUMENT...</div>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        const statusEl = document.getElementById('mem-ocr-status');
+        if(statusEl) {
+            statusEl.innerHTML = `<i class="fa-solid fa-check"></i> Verified. Score Increased!`;
+            statusEl.classList.replace('text-primary', 'text-accent');
+        }
+        const laser = document.getElementById('mem-scan-laser');
+        if(laser) laser.style.display = 'none';
+        
+        let newScore = parseInt(score) + 45; // Increase score gradually
+        if (newScore > 900) newScore = 900;
+        setTimeout(() => {
+            let newColor = newScore > 700 ? '#10b981' : (newScore > 400 ? '#3b82f6' : '#f59e0b');
+            showMemberDash(name, newScore, newColor);
+        }, 2000);
+    }, 2500);
+}
+
+window.openMemberPrint = function(name, score, color) {
+    const ks = document.getElementById('kiosk-screen');
+    ks.innerHTML = `
+        <div class="kiosk-print fade-in" style="position:relative;">
+            <button onclick="showMemberDash('${name}', ${score}, '${color}')" style="position:absolute; top:1rem; left:1rem; background:none; border:none; color:white; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <i class="fa-solid fa-print fa-4x text-primary mb-4" style="animation: pulse-border 1.5s infinite;"></i>
+            <h2 class="text-white mb-4 text-xl">Printing Certificate...</h2>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        const pn = document.querySelector('.cert-name');
+        const ps = document.querySelector('.cert-score');
+        if(pn) pn.innerText = name;
+        if(ps) ps.innerText = score;
+        
+        const out = document.querySelector('.certificate-output');
+        if(out) out.classList.add('printing');
+    }, 500);
+}
 
 const stages = [
     {
@@ -153,60 +268,33 @@ const stages = [
                     </div>
                     
                     <div class="db-grid">
-                        <div class="db-card" onclick="openProfile('Rahul Kumar', '780', '#10b981')">
-                            <div class="db-avatar" style="border: 2px solid #10b981; color: #10b981"><i class="fa-solid fa-user"></i></div>
+                        <div class="db-card" onclick="openProfile('Rahul Kumar', '320', '#f59e0b')">
+                            <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Rahul Kumar</div>
-                                <div class="db-score text-accent">${t.scoreTxt[appLang]} 780</div>
+                                <div class="db-score text-warning">${t.scoreTxt[appLang]} 320</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Anjali Gupta', '610', '#3b82f6')">
+                        <div class="db-card" onclick="openProfile('Anjali Gupta', '410', '#3b82f6')">
                             <div class="db-avatar" style="border: 2px solid #3b82f6; color: #3b82f6"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Anjali Gupta</div>
-                                <div class="db-score text-primary">${t.scoreTxt[appLang]} 610</div>
+                                <div class="db-score text-primary">${t.scoreTxt[appLang]} 410</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Sunil Das', '450', '#f59e0b')">
-                            <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
+                        <div class="db-card" onclick="openProfile('Sunil Das', '250', '#ef4444')">
+                            <div class="db-avatar" style="border: 2px solid #ef4444; color: #ef4444"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Sunil Das</div>
-                                <div class="db-score text-warning">${t.scoreTxt[appLang]} 450</div>
+                                <div class="db-score" style="color:#ef4444">${t.scoreTxt[appLang]} 250</div>
                             </div>
                         </div>
-                        <div class="db-card" onclick="openProfile('Meena Devi', '820', '#10b981')">
-                            <div class="db-avatar" style="border: 2px solid #10b981; color: #10b981"><i class="fa-solid fa-user"></i></div>
+                        <div class="db-card" onclick="openProfile('Meena Devi', '380', '#f59e0b')">
+                            <div class="db-avatar" style="border: 2px solid #f59e0b; color: #f59e0b"><i class="fa-solid fa-user"></i></div>
                             <div class="db-info">
                                 <div class="db-name">Meena Devi</div>
-                                <div class="db-score text-accent">${t.scoreTxt[appLang]} 820</div>
+                                <div class="db-score text-warning">${t.scoreTxt[appLang]} 380</div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Profile Modal inside device -->
-                    <div class="profile-modal" id="profile-modal">
-                        <div class="profile-modal-content">
-                            <button class="close-modal" onclick="closeProfile()"><i class="fa-solid fa-times"></i></button>
-                            <div class="profile-hdr">
-                                <div class="db-avatar" id="pm-avatar" style="width: 60px; height: 60px; font-size: 2rem;"><span id="pm-initial"></span></div>
-                                <div>
-                                    <h3 class="text-white text-lg font-space" id="pm-name">Name</h3>
-                                    <div class="text-sm text-muted">${t.profileTxt[appLang]}</div>
-                                </div>
-                            </div>
-                            <div class="profile-metrics">
-                                <div class="metric-box">
-                                    <div class="metric-label">TRUSTSCORE</div>
-                                    <div class="metric-val" id="pm-score">000</div>
-                                </div>
-                                <div class="metric-box">
-                                    <div class="metric-label">STATUS</div>
-                                    <div class="metric-val text-accent" style="font-size:0.9rem">ACTIVE</div>
-                                </div>
-                            </div>
-                            <button class="btn-add-member mt-md" style="width:100%; justify-content:center; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); box-shadow:none;" onclick="closeProfile()">
-                                ${t.closeTxt[appLang]}
-                            </button>
                         </div>
                     </div>
                 </div>
